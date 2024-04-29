@@ -2,7 +2,6 @@ package parser
 
 import (
 	"encoding/hex"
-
 	"github.com/btcsuite/btcd/txscript"
 	"github.com/btcsuite/btcd/wire"
 	log "github.com/sirupsen/logrus"
