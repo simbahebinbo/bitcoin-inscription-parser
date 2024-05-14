@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/balletcrypto/bitcoin-inscription-parser/parser"
+	"bitcoin-inscription-parser/parser"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 	"github.com/btcsuite/btcd/rpcclient"
 	log "github.com/sirupsen/logrus"
@@ -10,9 +10,9 @@ import (
 func main() {
 	// Create an RPC client that connects to a bitcoin node
 	config := &rpcclient.ConnConfig{
-		Host:         "your rpc host",
-		User:         "your rpc user",
-		Pass:         "your rpc password",
+		Host:         "52.221.9.230:18332",
+		User:         "testuser",
+		Pass:         "123456",
 		HTTPPostMode: true,
 		DisableTLS:   true,
 	}
@@ -23,7 +23,7 @@ func main() {
 	defer client.Shutdown()
 
 	// Get the raw transaction data of the specified tx hash
-	txHash := "fe76628c921e7894e4f34f036cd081fc4b21009639d6f4fc12577f59818b35b8"
+	txHash := "7470fa490ef14671baf470437f62833e8f673738c491111059db87c338951420"
 	hashFromStr, err := chainhash.NewHashFromStr(txHash)
 	if err != nil {
 		log.Fatalf("Get tx hash from string failed, error: %v", err)

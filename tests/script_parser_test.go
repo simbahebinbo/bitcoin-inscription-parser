@@ -3,7 +3,7 @@ package parser
 import (
 	"testing"
 
-	"github.com/balletcrypto/bitcoin-inscription-parser/parser"
+	"bitcoin-inscription-parser/parser"
 	"github.com/btcsuite/btcd/txscript"
 )
 
@@ -16,6 +16,8 @@ func TestScriptWithInscription(t *testing.T) {
 		// If we push []byte{1} as content type tag, the script builder AddData method will convert this into small
 		// number OP code: https://github.com/btcsuite/btcd/blob/master/txscript/scriptbuilder.go#L168
 		// So we use two OP_DATA_1 with AddOp method instead
+		// 如果我们将[]byte{1}推送为内容类型标签，脚本构建器的 AddData 方法将将其转换为小数字 OP 代码：https://github.com/btcsuite/btcd/blob/master/txscript/scriptbuilder.go#L168。
+		// 因此，我们使用 AddOp 方法来代替两个 OP_DATA_1。
 		AddOp(txscript.OP_DATA_1).
 		AddOp(txscript.OP_DATA_1).
 		AddData([]byte("text/plain;charset=utf-8")).
@@ -73,7 +75,8 @@ func TestScriptWithInscription(t *testing.T) {
 		inscriptions := parser.ParseInscriptions(test.script)
 		if len(inscriptions) != 0 {
 			for i := range inscriptions {
-				t.Logf("Find inscription with content type: %s, content length: %d", string(inscriptions[i].ContentType),
+				t.Logf("Find inscription with content type: %s, content length: %d",
+					string(inscriptions[i].ContentType),
 					inscriptions[i].ContentLength)
 			}
 		}
@@ -449,7 +452,7 @@ func TestScriptWithNoContentBody(t *testing.T) {
 	}
 }
 
-func TestScriptWithInvalidDtaLength(t *testing.T) {
+func TestScriptWithInvalidDataLength(t *testing.T) {
 	script, _ := txscript.NewScriptBuilder().
 		AddOps([]byte{txscript.OP_FALSE, txscript.OP_IF}).
 		AddData([]byte("ord")).

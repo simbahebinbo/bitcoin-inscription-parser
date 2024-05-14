@@ -6,63 +6,21 @@ using data pushes can be correctly parsed.
 
 The tool supports single or multiple inscriptions in all input of the transaction.
 
-# Installation
+bitcoin-inscription-parser 是一个工具，可以帮助解析比特币交易中的铭文。任何在数据推送中使用 `OP_FALSE OP_IF … OP_ENDIF` 包裹的铭文内容都可以被正确解析。
+
+该工具支持交易输入中的单个或多个铭文。
+
+
+# build and run
+
+```shell
+go build -o bin/ examples/parse_inscriptions_from_tx.go
+./bin/parse_inscriptions_from_tx
 ```
-go get github.com/balletcrypto/bitcoin-inscription-parser
-```
-# Example
-```go
-package main
-
-import (
-	"github.com/balletcrypto/bitcoin-inscription-parser/parser"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/rpcclient"
-	log "github.com/sirupsen/logrus"
-)
-
-func main() {
-	// Create an RPC client that connects to a bitcoin node
-	config := &rpcclient.ConnConfig{
-		Host:         "your rpc host",
-		User:         "your rpc user",
-		Pass:         "your rpc password",
-		HTTPPostMode: true,
-		DisableTLS:   true,
-	}
-	client, err := rpcclient.New(config, nil)
-	if err != nil {
-		log.Fatalf("Create rpc client connection to bitcoind node failed, error: %v", err)
-	}
-	defer client.Shutdown()
-
-	// Get the raw transaction data of the specified tx hash
-	txHash := "fe76628c921e7894e4f34f036cd081fc4b21009639d6f4fc12577f59818b35b8"
-	hashFromStr, err := chainhash.NewHashFromStr(txHash)
-	if err != nil {
-		log.Fatalf("Get tx hash from string failed, error: %v", err)
-	}
-
-	rawTx, err := client.GetRawTransaction(hashFromStr)
-	if err != nil {
-		log.Fatalf("Get raw tx failed, error: %v", err)
-	}
-	transactionInscriptions := parser.ParseInscriptionsFromTransaction(rawTx.MsgTx())
-	if len(transactionInscriptions) == 0 {
-		log.Infof("NO INSCRIPTONS!!!!!")
-	}
-	for _, v := range transactionInscriptions {
-		ins := v
-		log.Infof("INCRIPTION txin index: %d, tx in offset: %d, content type: %s, content length: %d",
-			ins.TxInIndex, ins.TxInOffset, ins.Inscription.ContentType, ins.Inscription.ContentLength)
-	}
-}
-```
-Also shown in examples folder
 
 # Unit tests
 ```
-go test -v script_parser_test.go 
+go test -v tests/script_parser_test.go 
 === RUN   TestScriptWithInscription
 === PAUSE TestScriptWithInscription
 === CONT  TestScriptWithInscription
@@ -153,3 +111,4 @@ PASS
 --- PASS: TestScriptWithNoEndIf (0.00s)
 PASS
 ```
+
